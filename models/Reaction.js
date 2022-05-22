@@ -1,39 +1,32 @@
-const { Schema, model } = require("mongoose");
+const { Schema, Types } = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
 const reactionSchema = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    thoughts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+    {
+        reactiontId: {
+          type: Schema.Types.ObjectId,
+          default: () => new Types.ObjectId(),
+        },
+        reactionBody: {
+          type: String,
+          required: true,
+          maxlength: 280,
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
-    ],
-    friends: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-  },
-  {
-    toJSON: {
-      virtuals: true,
-    },
-    id: false,
-  }
-)
+        toJSON: {
+          getters: true,
+        },
+        id: false,
+      }
+    );
 
-const User = model("User", userSchema);
-
-module.exports = User;
+module.exports = reactionSchema;
