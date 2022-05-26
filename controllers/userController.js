@@ -51,13 +51,13 @@ createUser(req, res) {
 },
 // Delete a User
 deleteUser(req, res) {
-  User.findOneAndDelete({ _id: req.params.userId })
-    .then((User) =>
-      !User
-        ? res.status(404).json({ message: 'No User with that ID' })
-        : Student.deleteMany({ _id: { $in: User.students } })
+  User.findOneAndRemove(
+    { _id: req.params.userId },
+    { runValidators: true, new: true }
+  )
+    .then((user) =>
+    res.json("user deleted")
     )
-    .then(() => res.json({ message: 'User and students deleted!' }))
     .catch((err) => res.status(500).json(err));
 },
 // Update a User
@@ -76,11 +76,32 @@ updateUser(req, res) {
 },
 
 addFriend(req, res) {
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $addToSet: {friends:req.params.friendId} },
+    { runValidators: true, new: true }
+  )
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No User with this id!' })
+        : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
 
 },
 
 deleteFriend(req, res) {
-
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $pull: {friends: {$in:req.params.friendId}}},
+    { runValidators: true, new: true }
+  )
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No User with this id!' })
+        : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
 }
 };
 
