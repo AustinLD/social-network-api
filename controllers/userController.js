@@ -16,6 +16,7 @@ const userController = {
 // Get all Users
 getUsers(req, res) {
   User.find()
+  .select("-__v")
   .then(async (users) => {
       const userObj = {
       users,
@@ -30,7 +31,7 @@ getUsers(req, res) {
 },
 // Get a User
 getSingleUser(req, res) {
-  User.findOne({ _id: req.params.UserId })
+  User.findOne({ _id: req.params.userId })
     .select('-__v')
     .then((User) =>
       !User
@@ -50,7 +51,7 @@ createUser(req, res) {
 },
 // Delete a User
 deleteUser(req, res) {
-  User.findOneAndDelete({ _id: req.params.UserId })
+  User.findOneAndDelete({ _id: req.params.userId })
     .then((User) =>
       !User
         ? res.status(404).json({ message: 'No User with that ID' })
@@ -62,17 +63,25 @@ deleteUser(req, res) {
 // Update a User
 updateUser(req, res) {
   User.findOneAndUpdate(
-    { _id: req.params.UserId },
+    { _id: req.params.userId },
     { $set: req.body },
     { runValidators: true, new: true }
   )
-    .then((User) =>
-      !User
+    .then((user) =>
+      !user
         ? res.status(404).json({ message: 'No User with this id!' })
-        : res.json(User)
+        : res.json(user)
     )
     .catch((err) => res.status(500).json(err));
 },
+
+addFriend(req, res) {
+
+},
+
+deleteFriend(req, res) {
+
+}
 };
 
 module.exports = userController

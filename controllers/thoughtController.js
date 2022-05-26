@@ -1,3 +1,4 @@
+const req = require('express/lib/request');
 const { User, Thought } = require('../models');
 
 module.exports = {
@@ -52,4 +53,12 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+
+  deleteReaction(req, res) {
+
+  },
+
+  addReaction(req, res) {
+
+  }
 };
